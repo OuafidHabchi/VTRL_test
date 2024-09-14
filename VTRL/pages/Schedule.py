@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests  # For sending data to the API
 from pymongo import MongoClient
+from datetime import datetime, timedelta
 
 # Connexion à MongoDB
 client = MongoClient("mongodb+srv://wafid:wafid@ouafid.aihn5iq.mongodb.net")
@@ -37,7 +38,6 @@ if employees:
         "09:15 AM",
         "9:30 AM",
         "16:00 PM",
-        
     ]
     selected_shift = st.selectbox("Quart du travail", work_shifts)
 
@@ -50,11 +50,28 @@ if employees:
             # Prepare the selected employee data
             selected_data = df.loc[selected_employees, ["Name and ID", "Personal Phone Number","Email"]]
             employee_data = selected_data.to_dict(orient="records")
+           
+            # Calculate tomorrow's date
+            tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
 
-            # Prepare data to send to the API
+            # Create messages for each employee
+            messages = []
+            for employee in employee_data:
+                name_and_id = employee["Name and ID"]
+                message = (f"CONFIRMATION: {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}, "
+                           "svp confirmer votre présence. "
+                           f"CONFIRMATION RAPIDE: {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}, "
+                           "svp confirmer votre présence.")
+                messages.append({
+                    "name_and_id": name_and_id,
+                    "message": message
+                })
+
+            # Prepare data to send to the API (one message for all employees)
             data_to_send = {
                 "shift": selected_shift,
-                "employees": employee_data
+                "employees": employee_data,
+                "messages": messages
             }
 
             # Send the data to the API
