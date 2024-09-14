@@ -12,7 +12,7 @@ st.title("Employee Data from Google Sheets")
 
 # Define a function to apply custom CSS styles based on the 'confirmation' status
 def color_confirmation(row):
-    if row['confirmation'] == 'Yes':
+    if row['confirmation'] == 'YES':
         color = 'background-color: lightgreen;'
     elif row['confirmation'] == 'NO':
         color = 'background-color: lightcoral;'
