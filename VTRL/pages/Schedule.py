@@ -58,7 +58,7 @@ if employees:
             }
 
             # Send the data to the API
-            api_url = "https://hooks.zapier.com/hooks/catch/19888094/2h9hlnk/"  # Replace with your API endpoint
+            api_url = "https://hooks.zapier.com/hooks/catch/19888094/2hb64x3/"  # Replace with your API endpoint
             response = requests.post(api_url, json=data_to_send)
 
             if response.status_code == 200:
