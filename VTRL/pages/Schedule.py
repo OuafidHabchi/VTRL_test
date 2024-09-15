@@ -59,15 +59,13 @@ if employees:
             for employee in employee_data:
                 name_and_id = employee["Name and ID"]
                 message = (f"CONFIRMATION: {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}, "
-                           "svp confirmer votre présence. "
-                           f"CONFIRMATION RAPIDE: {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}, "
                            "svp confirmer votre présence.")
                 messages.append({
                     "name_and_id": name_and_id,
                     "message": message
                 })
 
-            # Prepare data to send to the API (one message for all employees)
+            # Prepare data to send to the API (formatted according to your request)
             data_to_send = {
                 "shift": selected_shift,
                 "employees": employee_data,
