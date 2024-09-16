@@ -48,31 +48,23 @@ if employees:
             st.error("Veuillez sélectionner au moins un employé.")
         else:
             # Prepare the selected employee data
-            selected_data = df.loc[selected_employees, ["Name and ID", "Personal Phone Number","Email"]]
+            selected_data = df.loc[selected_employees, ["Name and ID", "Personal Phone Number", "Email"]]
             employee_data = selected_data.to_dict(orient="records")
-           
+            
             # Calculate tomorrow's date
             tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
 
-            # Create messages for each employee
-            messages = []
-            for employee in employee_data:
-                name_and_id = employee["Name and ID"]
-                message = (f"CONFIRMATION: {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}, "
-                                f"svp confirmer votre présence.\n"
-                                f"CONFIRMATION: {name_and_id}, you are scheduled to work tomorrow ({tomorrow}) at {selected_shift}, "
-                                "please confirm your presence.")
+            # Create a single message for all employees
+            message = (f"CONFIRMATION: Vous travaillez demain ({tomorrow}) à {selected_shift}, "
+                       f"svp confirmer votre présence.\n"
+                       f"CONFIRMATION: You are scheduled to work tomorrow ({tomorrow}) at {selected_shift}, "
+                       "please confirm your presence.")
 
-                messages.append({
-                    "name_and_id": name_and_id,
-                    "message": message
-                })
-
-            # Prepare data to send to the API (formatted according to your request)
+            # Prepare data to send to the API (only one message)
             data_to_send = {
                 "shift": selected_shift,
                 "employees": employee_data,
-                "messages": messages
+                "message": message
             }
 
             # Send the data to the API
@@ -84,4 +76,4 @@ if employees:
             else:
                 st.error(f"Erreur lors de l'envoi des données à l'API: {response.status_code}")
 else:
-    st.write("Aucun employé trouvé dans la base de données.")
+    st.write("Aucun employé trouvé dans la base de données.") 
