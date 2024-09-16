@@ -58,10 +58,10 @@ if employees:
             messages = []
             for employee in employee_data:
                 name_and_id = employee["Name and ID"]
-                message = (f"CONFIRMATION: {name_and_id}, you are scheduled to work tomorrow ({tomorrow}) at {selected_shift}. "
-           "Please confirm your availability.\n"
-           "CONFIRMATION : {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}. "
-           "Veuillez confirmer votre présence.")
+               message = (f"CONFIRMATION: {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}, "
+                                f"svp confirmer votre présence.\n"
+                                f"CONFIRMATION: {name_and_id}, you are scheduled to work tomorrow ({tomorrow}) at {selected_shift}, "
+                                "please confirm your availability.")
 
                 messages.append({
                     "name_and_id": name_and_id,
