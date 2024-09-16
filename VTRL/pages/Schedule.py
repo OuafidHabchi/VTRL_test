@@ -58,7 +58,7 @@ if employees:
             messages = []
             for employee in employee_data:
                 name_and_id = employee["Name and ID"]
-               message = (f"CONFIRMATION: {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}, "
+                message = (f"CONFIRMATION: {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}, "
                                 f"svp confirmer votre présence.\n"
                                 f"CONFIRMATION: {name_and_id}, you are scheduled to work tomorrow ({tomorrow}) at {selected_shift}, "
                                 "please confirm your availability.")
