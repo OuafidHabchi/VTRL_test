@@ -61,7 +61,7 @@ if employees:
                 message = (f"CONFIRMATION: {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}, "
                                 f"svp confirmer votre présence.\n"
                                 f"CONFIRMATION: {name_and_id}, you are scheduled to work tomorrow ({tomorrow}) at {selected_shift}, "
-                                "please confirm your availability.")
+                                "please confirm your presence.")
 
                 messages.append({
                     "name_and_id": name_and_id,
