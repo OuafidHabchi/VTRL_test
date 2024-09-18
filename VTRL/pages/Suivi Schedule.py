@@ -12,15 +12,20 @@ st.title("Employee Data from Google Sheets")
 
 # Define a function to apply custom CSS styles based on the 'confirmation' status
 def color_confirmation(row):
-    if row['confirmation'] == 'YES':
-        color = 'background-color: lightgreen;'
-    elif row['confirmation'] == 'NO':
-        color = 'background-color: lightcoral;'
-    elif row['confirmation'] == 'sent':
-        color = 'background-color: lightgray;'
+    # Normalize the confirmation value to lowercase
+    confirmation = row['confirmation'].strip().lower()
+    
+    if confirmation in ['yes', 'oui', 'Yes', 'Oui', 'ok', 'Confirmed','YES']:
+        color = 'background-color: lightgreen;'  # Green for confirmations
+    elif confirmation in ['no', 'non', 'No','NN','nn','Non']:
+        color = 'background-color: lightcoral;'  # Red for rejections
+    elif confirmation == 'sent':
+        color = 'background-color: lightgray;'  # Gray for 'sent'
     else:
-        color = ''  # No color for other statuses
+        color = ''  # No color for other statuses or empty values
+    
     return [color] * len(row)  # Apply the color to the entire row
+
 
 # Apply the styling function to the DataFrame
 styled_df = df.style.apply(color_confirmation, axis=1)
