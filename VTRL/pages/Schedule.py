@@ -3,7 +3,7 @@ import pandas as pd
 import requests  # For sending data to the API
 from pymongo import MongoClient
 from datetime import datetime, timedelta
-
+fro
 # Connexion à MongoDB
 client = MongoClient("mongodb+srv://wafid:wafid@ouafid.aihn5iq.mongodb.net")
 db = client["Employees"]
