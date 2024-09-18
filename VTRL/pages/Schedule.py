@@ -50,25 +50,29 @@ if employees:
             # Prepare the selected employee data
             selected_data = df.loc[selected_employees, ["Name and ID", "Personal Phone Number", "Email"]]
             employee_data = selected_data.to_dict(orient="records")
-            
+           
             # Calculate tomorrow's date
             tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
 
-            # Create a single message for all employees
-            message = (f"CONFIRMATION: Vous travaillez demain ({tomorrow}) à {selected_shift}, "
-                       f"svp confirmer votre présence.\n"
-                       f"CONFIRMATION: You are scheduled to work tomorrow ({tomorrow}) at {selected_shift}, "
-                       "please confirm your presence.")
+            # Add message for each employee in their data
+            for employee in employee_data:
+                name_and_id = employee["Name and ID"]
+                message = (f"CONFIRMATION: {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}, "
+                           f"svp confirmer votre présence.\n"
+                           f"CONFIRMATION: {name_and_id}, you are scheduled to work tomorrow ({tomorrow}) at {selected_shift}, "
+                           "please confirm your availability.")
+                
+                # Add the message to the employee's data
+                employee['message'] = message
 
-            # Prepare data to send to the API (only one message)
+            # Prepare data to send to the API
             data_to_send = {
                 "shift": selected_shift,
-                "employees": employee_data,
-                "message": message
+                "employees": employee_data
             }
 
             # Send the data to the API
-            api_url = "https://hooks.zapier.com/hooks/catch/19888094/2hwjq84/"  # Replace with your API endpoint
+            api_url = "https://hook.us2.make.com/6lo0leyylnmimbx2kxmajcob0xbhcc19"  # Replace with your API endpoint
             response = requests.post(api_url, json=data_to_send)
 
             if response.status_code == 200:
@@ -76,4 +80,4 @@ if employees:
             else:
                 st.error(f"Erreur lors de l'envoi des données à l'API: {response.status_code}")
 else:
-    st.write("Aucun employé trouvé dans la base de données.") 
+    st.write("Aucun employé trouvé dans la base de données.")
