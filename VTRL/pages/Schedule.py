@@ -9,7 +9,13 @@ client = MongoClient("mongodb+srv://wafid:wafid@ouafid.aihn5iq.mongodb.net")
 db = client["Employees"]
 collection_name = "employes"
 
-# Fonction pour récupérer tous les employés dans MongoDB
+# Fetch data from Google Sheets (include CSV format)
+sheet_url = "https://docs.google.com/spreadsheets/d/14dZqtAclmYsudVHV7mlIbXyM2wSwcu55KhwCOm9_Bv8/gviz/tq?tqx=out:csv"
+
+# Load Google Sheet into DataFrame
+df_sheet = pd.read_csv(sheet_url)
+
+# Function to fetch all employees from MongoDB
 def get_all_employees():
     collection = db[collection_name]
     employees = list(collection.find({}, {'_id': 0}))  # Exclude the '_id' field
@@ -22,9 +28,12 @@ st.title("Schedule des employés")
 employees = get_all_employees()
 
 if employees:
-    # Convert to DataFrame
+    # Convert to DataFrame from MongoDB data
     df = pd.DataFrame(employees)
-    
+
+    # Merge with the Google Sheet data to get 'confirmation' status
+    df = df.merge(df_sheet[['Name and ID', 'confirmation']], on='Name and ID', how='left')
+
     # Multiselect for employee selection
     selected_employees = st.multiselect(
         "Sélectionnez un ou plusieurs employés pour le planning:",
@@ -48,14 +57,21 @@ if employees:
             st.error("Veuillez sélectionner au moins un employé.")
         else:
             # Prepare the selected employee data
-            selected_data = df.loc[selected_employees, ["Name and ID", "Personal Phone Number", "Email"]]
+            selected_data = df.loc[selected_employees, ["Name and ID", "Personal Phone Number", "Email", "confirmation"]]
             employee_data = selected_data.to_dict(orient="records")
-           
+
             # Calculate tomorrow's date
             tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
 
-            # Add message for each employee in their data
+            # Prepare a list for employees to be contacted
+            employees_to_contact = []
+
+            # Add message for each employee who has not been contacted yet
             for employee in employee_data:
+                if employee['confirmation'] == 'sent':
+                    st.warning(f"{employee['Name and ID']} a déjà reçu un message.")
+                    continue  # Skip if the employee has already been contacted
+                
                 name_and_id = employee["Name and ID"]
                 message = (f"CONFIRMATION: {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}, "
                            f"svp confirmer votre présence.\n"
@@ -64,20 +80,28 @@ if employees:
                 
                 # Add the message to the employee's data
                 employee['message'] = message
+                employees_to_contact.append(employee)  # Only contact employees who have not been contacted
 
-            # Prepare data to send to the API
-            data_to_send = {
-                "shift": selected_shift,
-                "employees": employee_data
-            }
+            if employees_to_contact:
+                # Prepare data to send to the API
+                data_to_send = {
+                    "shift": selected_shift,
+                    "employees": employees_to_contact
+                }
 
-            # Send the data to the API
-            api_url = "https://hook.us2.make.com/6lo0leyylnmimbx2kxmajcob0xbhcc19"  # Replace with your API endpoint
-            response = requests.post(api_url, json=data_to_send)
+                # Send the data to the API
+                api_url = "https://hook.us2.make.com/6lo0leyylnmimbx2kxmajcob0xbhcc19"  # Replace with your API endpoint
+                response = requests.post(api_url, json=data_to_send)
 
-            if response.status_code == 200:
-                st.success("Les informations ont été envoyées avec succès!")
+                if response.status_code == 200:
+                    st.success("Les informations ont été envoyées avec succès!")
+
+                    # Update the confirmation status locally (you can update Google Sheets if needed)
+                    for employee in employees_to_contact:
+                        df.loc[df['Name and ID'] == employee['Name and ID'], 'confirmation'] = 'sent'
+                else:
+                    st.error(f"Erreur lors de l'envoi des données à l'API: {response.status_code}")
             else:
-                st.error(f"Erreur lors de l'envoi des données à l'API: {response.status_code}")
+                st.info("Tous les employés sélectionnés ont déjà été contactés.")
 else:
     st.write("Aucun employé trouvé dans la base de données.")
