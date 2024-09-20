@@ -75,6 +75,7 @@ if employees:
                 name_and_id = employee["Name and ID"]
                 message = (f"CONFIRMATION: {name_and_id}, vous travaillez demain ({tomorrow}) à {selected_shift}, "
                            f"svp confirmer votre présence.\n"
+                           "\n"
                            f"CONFIRMATION: {name_and_id}, you are scheduled to work tomorrow ({tomorrow}) at {selected_shift}, "
                            "please confirm your availability.")
                 
@@ -94,7 +95,7 @@ if employees:
                 response = requests.post(api_url, json=data_to_send)
 
                 if response.status_code == 200:
-                    st.success("Les informations ont été envoyées avec succès!")
+                    st.success("Les confirmations ont été envoyées avec succès ! Veuillez consulter **Suivi Schedule** pour suivre les réponses.")
 
                     # Update the confirmation status locally (you can update Google Sheets if needed)
                     for employee in employees_to_contact:
