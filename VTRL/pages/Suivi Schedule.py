@@ -6,10 +6,6 @@ sheet_url = "https://docs.google.com/spreadsheets/d/14dZqtAclmYsudVHV7mlIbXyM2wS
 
 # Read the CSV data from the Google Sheet
 df = pd.read_csv(sheet_url)
-
-# Display the actual column names in the DataFrame to check for mismatches
-st.write("Columns in the DataFrame:", df.columns.tolist())
-
 # Strip any leading/trailing spaces from column names
 df.columns = df.columns.str.strip()
 
