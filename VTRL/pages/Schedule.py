@@ -80,7 +80,7 @@ if employees:
                 name_and_id = employee["Name and ID"]
 
                 if selected_shift == "Cancelled Shift":
-                    message = (f"Cher(e) {name_and_id}, \n\n"
+                    message = (f"Cher  {name_and_id}, \n\n"
                                "En raison de réductions d'itinéraires imprévues de la part d'Amazon, "
                                f"votre quart de travail pour demain ({tomorrow}) est annulé. "
                                "Restez disponible au cas où, et vous pourriez obtenir une carte-cadeau Tim Hortons.\n\n"
@@ -91,11 +91,11 @@ if employees:
                 else:
                     message = (f"Cher(e) {name_and_id}, \n\n"
                                f"Vous êtes programmé(e) pour travailler demain ({tomorrow}) à {selected_shift}. \n"
-                               "Merci de bien vouloir confirmer votre disponibilité en répondant à ce message.\n\n"
-                               "Cordialement,\n"
+                               "Merci de bien vouloir confirmer votre disponibilité en répondant à ce message par Oui .\n\n"
+                               
                                f"Dear {name_and_id}, \n\n"
                                f"You are scheduled to work tomorrow ({tomorrow}) at {selected_shift}. \n"
-                               "Please confirm your availability by responding to this message.\n\n"
+                               "Please confirm your availability by responding to this message by Yes.\n\n"
                                "Best regards, \nVTRL Dispatch")
 
                 # Add the message to the employee's data
