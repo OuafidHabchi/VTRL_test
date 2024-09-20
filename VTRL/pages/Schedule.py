@@ -89,7 +89,7 @@ if employees:
                                "Tim Hortons gift card if needed.\n\n"
                                "Cordialement, \n VTRL Dispatch")
                 else:
-                    message = (f"Cher(e) {name_and_id}, \n\n"
+                    message = (f"Cher {name_and_id}, \n\n"
                                f"Vous êtes programmé(e) pour travailler demain ({tomorrow}) à {selected_shift}. \n"
                                "Merci de bien vouloir confirmer votre disponibilité en répondant à ce message par Oui .\n\n"
                                
