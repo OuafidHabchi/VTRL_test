@@ -82,6 +82,11 @@ if employees:
         else:
             # Prepare the selected employee data
             selected_data = df.loc[selected_employees, ["Name and ID", "Personal Phone Number", "Email"]]
+
+            # Handling NaN values (e.g., empty fields in the database)
+            selected_data = selected_data.fillna("")  # Replace NaN with empty string
+
+            # Convert DataFrame to dictionary
             employee_data = selected_data.to_dict(orient="records")
 
             # Calculate tomorrow's date
@@ -123,4 +128,4 @@ if employees:
             if send_to_api(data_to_send):
                 st.success("Les confirmations ont été envoyées avec succès ! Veuillez consulter **Suivi Schedule** pour suivre les réponses.")
 else:
-    st.write("Aucun employé trouvé dans la base de données.")
+    st.write("Aucun employé trouvé dans la base de données.")  
