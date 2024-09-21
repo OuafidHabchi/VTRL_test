@@ -79,10 +79,10 @@ def add_client_manually():
         st.warning("Aucun champ trouvé dans la collection MongoDB.")
 
 # Interface principale
-st.title("Ajouter des employés")
+st.title("Add Drivers")
 
 # Option pour ajouter via CSV ou manuellement
-option = st.radio("Choisir une méthode pour ajouter des employés", ("Via CSV", "Manuellement"))
+option = st.radio("Choisir une méthode pour ajouter des employés", ("Via CSV", "Manually"))
 
 if option == "Via CSV":
     upload_csv_and_add_to_mongo()
