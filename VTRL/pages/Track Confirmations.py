@@ -1,11 +1,26 @@
 import streamlit as st
 import pandas as pd
+from pymongo import MongoClient
 
-# Replace this URL with your own Google Sheet URL
+# Connexion à MongoDB pour récupérer les shifts et leurs couleurs
+client = MongoClient("mongodb+srv://wafid:wafid@ouafid.aihn5iq.mongodb.net")
+db = client["Employees"]
+shifts_collection = "work_shifts"
+
+# Récupérer la liste des shifts et des couleurs correspondantes
+def get_shifts_colors():
+    shifts = list(db[shifts_collection].find({}, {'_id': 0, 'name': 1, 'color': 1}))
+    return {shift['name']: shift['color'] for shift in shifts}
+
+# Dictionnaire des couleurs des shifts (hors "Cancelled Shift")
+shift_colors = get_shifts_colors()
+
+# URL de la Google Sheet (à remplacer par le tien si nécessaire)
 sheet_url = "https://docs.google.com/spreadsheets/d/14dZqtAclmYsudVHV7mlIbXyM2wSwcu55KhwCOm9_Bv8/gviz/tq?tqx=out:csv"
 
-# Read the CSV data from the Google Sheet
+# Lire les données CSV depuis Google Sheets
 df = pd.read_csv(sheet_url)
+
 # Strip any leading/trailing spaces from column names
 df.columns = df.columns.str.strip()
 
@@ -24,30 +39,25 @@ if missing_columns:
 df = df[existing_columns]
 
 # Display the title of the app
-st.title("Track Employee's Confirmation ")
+st.title("Employee Data from Google Sheets (Selected Columns Only)")
 
 # Function to determine if the response is positive
 def is_positive_response(response):
     positive_responses = {"yes", "oui", "y", "confirmed", "ok"}  # Add more variations if needed
     return str(response).strip().lower() in positive_responses
 
-# Function to assign color based on the 'cycle' if 'confirmation' is 'sent'
+# Function to assign color based on the 'cycle' and a predefined color for "Cancelled Shift"
 def get_shift_color(row):
-    if 'cycle' in row:  # Ensure 'cycle' column exists
+    if 'cycle' in row:
         cycle = row['cycle']
-        if "Cycle 0" in cycle:
-             return 'background-color: lightblue;'  # Light blue for Cycle 0
-        elif "Cycle 1 (w1)" in cycle:
-            return 'background-color: #ffff99;'  # Lighter yellow for Cycle 1 (w1)v
-        elif "Cycle 1 (w2)" in cycle:
-            return 'background-color: #ffd700;'  # Darker yellow (gold) for Cycle 1 (w2)
-        elif "Cycle 2" in cycle:
-           return 'background-color: #dda0dd;'  # Mauve-like color for Cycle 2 (Plum)
-        elif "Flex" in cycle:
-            return 'background-color: #9370DB;'  # Medium purple for evening shift (Flex)
-        elif "Cancelled" in cycle:
-            return 'background-color: lightgray;'  # Gray for Cancelled Shift
-    return 'background-color: white;'  # Default color if no specific cycle color is found
+        # Si le shift est "Cancelled Shift", toujours renvoyer la couleur orange
+        if "Cancelled Shift" in cycle:
+            return 'background-color: orange;'  # Couleur orange pour "Cancelled Shift"
+        # Utiliser les couleurs stockées pour les autres shifts
+        for shift_name, color in shift_colors.items():
+            if shift_name in cycle:
+                return f'background-color: {color};'  # Utiliser la couleur stockée dans MongoDB
+    return 'background-color: white;'  # Couleur par défaut si aucun cycle spécifique n'est trouvé
 
 # Define a function to apply custom CSS styles based on the 'confirmation' status and responses
 def color_confirmation(row):
