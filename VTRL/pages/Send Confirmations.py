@@ -45,7 +45,7 @@ def send_to_api(data):
         return False
 
 # Page title
-st.title("Schedule des employés")
+st.title("Confirmation Sender")
 
 # Fetch employees for selection
 employees = get_all_employees()
