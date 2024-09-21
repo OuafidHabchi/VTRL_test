@@ -87,8 +87,12 @@ def color_confirmation(row):
     
     return [color] * len(row)  # Appliquer la couleur à toute la ligne
 
-# Appliquer la fonction de style au DataFrame
-styled_df = df.style.apply(color_confirmation, axis=1)
-
-# Afficher le DataFrame stylisé dans Streamlit
-st.dataframe(styled_df)
+# Grouping the DataFrame by 'cycle' and displaying separate tables
+if 'cycle' in df.columns:
+    grouped = df.groupby('cycle')
+    for cycle, group in grouped:
+        st.markdown(f"### Cycle: {cycle}")  # Display cycle as a header
+        styled_group = group.style.apply(color_confirmation, axis=1)
+        st.dataframe(styled_group)  # Display the styled dataframe for this group
+else:
+    st.error("The 'cycle' column is missing from the dataset.")
