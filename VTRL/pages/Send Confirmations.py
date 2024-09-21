@@ -103,11 +103,11 @@ if employees:
                 else:
                     message = (f"Cher(e) {name_and_id}, \n\n"
                                f"Vous êtes programmé(e) pour travailler demain ({tomorrow}) à {selected_shift}. \n"
-                               "Merci de bien vouloir confirmer votre disponibilité en répondant à ce message.\n\n"
+                               "Merci de bien vouloir confirmer votre disponibilité en répondant à ce message PAR Oui.\n\n"
                                "Cordialement, \n\n"
                                f"Dear {name_and_id}, \n\n"
                                f"You are scheduled to work tomorrow ({tomorrow}) at {selected_shift}. \n"
-                               "Please confirm your availability by responding to this message.\n\n"
+                               "Please confirm your availability by responding to this message BY Yes.\n\n"
                                "Best regards, \nVTRL Dispatch")
 
                 # Add the message to the employee's data
