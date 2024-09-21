@@ -41,12 +41,26 @@ df = df[existing_columns]
 # Display the title of the app
 st.title("Drivers Confirmations Tracker")
 
-# Function to determine if the response is positive
+# Fonction pour déterminer si la réponse est positive
+positive_responses = {"yes", "oui", "y", "confirmed", "ok", "okay"}  # Variations des réponses positives
 def is_positive_response(response):
-    positive_responses = {"yes", "oui", "y", "confirmed", "ok"}  # Add more variations if needed
     return str(response).strip().lower() in positive_responses
 
-# Function to assign color based on the 'cycle' and a predefined color for "Cancelled Shift"
+# Filtrer les réponses positives
+positive_df = df[df['confirmation'].apply(is_positive_response)]
+
+# Filtrer les réponses "sent"
+sent_df = df[df['confirmation'].str.strip().str.lower() == 'sent']
+
+# Filtrer toutes les autres réponses (ni positives ni 'sent')
+other_df = df[~df['confirmation'].apply(is_positive_response) & (df['confirmation'].str.strip().str.lower() != 'sent')]
+
+# Afficher les nombres en gras et plus grands avec st.markdown
+st.markdown(f"### **Confirmed Responses: {len(positive_df)}**")
+st.markdown(f"### **Pending Responses: {len(sent_df)}**")
+st.markdown(f"### **Declined Responses: {len(other_df)}**")
+
+# Fonction pour assigner des couleurs en fonction du 'cycle' et d'une couleur prédéfinie pour "Cancelled Shift"
 def get_shift_color(row):
     if 'cycle' in row:
         cycle = row['cycle']
@@ -59,22 +73,22 @@ def get_shift_color(row):
                 return f'background-color: {color};'  # Utiliser la couleur stockée dans MongoDB
     return 'background-color: white;'  # Couleur par défaut si aucun cycle spécifique n'est trouvé
 
-# Define a function to apply custom CSS styles based on the 'confirmation' status and responses
+# Définir une fonction pour appliquer des styles CSS personnalisés en fonction de la confirmation
 def color_confirmation(row):
     response = row['confirmation'].strip().lower() if 'confirmation' in row else 'unknown'
     
     if is_positive_response(response):
-        color = 'background-color: lightgreen;'  # Green for positive responses (Yes, Oui, etc.)
+        color = 'background-color: lightgreen;'  # Vert pour les réponses positives (Yes, Oui, etc.)
     elif response == 'sent':
-        # Color based on cycle type if confirmation is 'sent'
+        # Couleur en fonction du type de cycle si la confirmation est 'sent'
         color = get_shift_color(row)
     else:
-        color = 'background-color: lightcoral;'  # Red for negative or unknown responses
+        color = 'background-color: lightcoral;'  # Rouge pour les réponses négatives ou inconnues
     
-    return [color] * len(row)  # Apply the color to the entire row
+    return [color] * len(row)  # Appliquer la couleur à toute la ligne
 
-# Apply the styling function to the DataFrame
+# Appliquer la fonction de style au DataFrame
 styled_df = df.style.apply(color_confirmation, axis=1)
 
-# Display the styled DataFrame in Streamlit
+# Afficher le DataFrame stylisé dans Streamlit
 st.dataframe(styled_df)
