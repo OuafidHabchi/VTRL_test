@@ -80,7 +80,7 @@ if st.button("Envoyer le message"):
         cleaned_data = clean_employee_data(data)
 
         # Envoyer les données via le webhook
-        webhook_url = "https://hook.us2.make.com/6lo0leyylnmimbx2kxmajcob0xbhcc19"  # Remplacez par votre URL de webhook
+        webhook_url = ""  # Remplacez par votre URL de webhook
         try:
             # Envoi via requests en format JSON avec les employés et le lien du document
             response = requests.post(webhook_url, json=cleaned_data)
