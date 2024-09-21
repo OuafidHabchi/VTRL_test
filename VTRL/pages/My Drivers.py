@@ -14,7 +14,7 @@ def get_all_employees():
     return employees
 
 # Page title
-st.title("Liste des employés")
+st.title("List of Drivers")
 
 # Fetch and display employees
 employees = get_all_employees()
