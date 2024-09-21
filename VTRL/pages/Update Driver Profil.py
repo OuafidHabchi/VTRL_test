@@ -26,7 +26,7 @@ def update_employee(old_data, new_data):
     st.success("Profil mis à jour avec succès.")
 
 # Interface principale
-st.title("Gestion des employés")
+st.title("Profiles Management")
 
 # Liste déroulante des employés
 employees = get_all_employees()
