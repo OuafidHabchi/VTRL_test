@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 client = MongoClient("mongodb+srv://wafid:wafid@ouafid.aihn5iq.mongodb.net")
 db = client["Employees"]
 collection_name = "employes"
+shifts_collection = "work_shifts"  # Collection pour stocker les shifts
 
 # Fonction pour récupérer tous les employés dans MongoDB
 def get_all_employees():
@@ -17,6 +18,16 @@ def get_all_employees():
         return employees
     except Exception as e:
         st.error(f"Erreur lors de la récupération des employés: {e}")
+        return []
+
+# Fonction pour récupérer les shifts depuis MongoDB
+def get_all_shifts():
+    try:
+        collection = db[shifts_collection]
+        shifts = list(collection.find({}, {'_id': 0}))  # Exclude '_id' field
+        return shifts
+    except Exception as e:
+        st.error(f"Erreur lors de la récupération des shifts: {e}")
         return []
 
 # Fonction pour envoyer les données à l'API
@@ -50,17 +61,18 @@ if employees:
         format_func=lambda x: f"{df.loc[x, 'Name and ID']}"  # Display 'Name and ID' in the selection dropdown
     )
 
-    # Dropdown (selectbox) for work shifts
+    # Fetch shifts for the dropdown
     st.subheader("Sélectionnez un quart du travail:")
-    work_shifts = [
-        "Cycle 0 (06:00 AM)",
-        "Cycle 1 (w1) (09:15 AM)",
-        "Cycle 1 (w2) (09:30 AM)",
-        "Cycle 2 (12:00 PM)",
-        "Flex (16:00 PM)",
-        "Cancelled Shift"
-    ]
-    selected_shift = st.selectbox("Quart du travail", work_shifts)
+    shifts = get_all_shifts()
+
+    # Ajouter l'option "Cancelled Shift" en premier
+    shift_options = ["Cancelled Shift"]
+
+    # Ajouter les shifts depuis MongoDB (s'il y en a)
+    shift_options += [f"{shift['name']} ({shift['time']})" for shift in shifts]
+
+    # Affichage du selectbox avec les options disponibles
+    selected_shift = st.selectbox("Quart du travail", shift_options)
 
     # Button for confirmation
     if st.button("Confirmer"):
@@ -79,23 +91,23 @@ if employees:
             for employee in employee_data:
                 name_and_id = employee["Name and ID"]
 
-                if selected_shift == "Cancelled Shift":
-                    message = (f"Cher  {name_and_id}, \n\n"
+                if "Cancelled Shift" in selected_shift:
+                    message = (f"Cher(e) {name_and_id}, \n\n"
                                "En raison de réductions d'itinéraires imprévues de la part d'Amazon, "
                                f"votre quart de travail pour demain ({tomorrow}) est annulé. "
                                "Restez disponible au cas où, et vous pourriez obtenir une carte-cadeau Tim Hortons.\n\n"
                                "Due to unforeseen route reductions from Amazon, your shift for tomorrow "
                                f"({tomorrow}) has been cancelled. Stay available, and you might receive a "
                                "Tim Hortons gift card if needed.\n\n"
-                               "Cordialement, \n VTRL Dispatch")
+                               "Cordialement, \nVTRL Dispatch")
                 else:
-                    message = (f"Cher {name_and_id}, \n\n"
+                    message = (f"Cher(e) {name_and_id}, \n\n"
                                f"Vous êtes programmé(e) pour travailler demain ({tomorrow}) à {selected_shift}. \n"
-                               "Merci de bien vouloir confirmer votre disponibilité en répondant à ce message par Oui .\n\n"
-                               
+                               "Merci de bien vouloir confirmer votre disponibilité en répondant à ce message.\n\n"
+                               "Cordialement, \nVTRL Dispatch\n\n"
                                f"Dear {name_and_id}, \n\n"
                                f"You are scheduled to work tomorrow ({tomorrow}) at {selected_shift}. \n"
-                               "Please confirm your availability by responding to this message by Yes.\n\n"
+                               "Please confirm your availability by responding to this message.\n\n"
                                "Best regards, \nVTRL Dispatch")
 
                 # Add the message to the employee's data
