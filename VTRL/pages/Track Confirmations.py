@@ -39,7 +39,7 @@ if missing_columns:
 df = df[existing_columns]
 
 # Display the title of the app
-st.title("Employee Data from Google Sheets (Selected Columns Only)")
+st.title("Drivers Confirmations Tracker")
 
 # Function to determine if the response is positive
 def is_positive_response(response):
