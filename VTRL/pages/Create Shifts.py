@@ -48,10 +48,10 @@ def delete_shift(shift_id):
         st.error(f"Erreur lors de la suppression du shift: {e}")
 
 # Page pour ajouter des shifts
-st.title("Gestion des shifts")
+st.title("Shift Management")
 
 # ---- AJOUTER UN NOUVEAU SHIFT ----
-st.subheader("Ajouter un nouveau shift")
+st.subheader("Add a New Shift")
 
 # Input fields for creating a shift
 shift_name = st.text_input("Nom du shift")
@@ -69,7 +69,7 @@ if st.button("Ajouter le shift"):
         st.error("Veuillez remplir tous les champs.")
 
 # ---- AFFICHER ET GÉRER LES SHIFTS EXISTANTS ----
-st.subheader("Modifier ou supprimer un shift existant")
+st.subheader("Update or delete an existing shift")
 
 # Récupérer tous les shifts existants
 shifts = list(db[shifts_collection].find({}))
