@@ -34,7 +34,7 @@ def clean_employee_data(data):
     return data
 
 # Interface principale
-st.title("Envoyer un message aux employés")
+st.title("Send a personalized message")
 
 # Récupérer la liste des employés
 employees = get_all_employees()
