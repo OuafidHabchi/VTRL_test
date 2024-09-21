@@ -42,7 +42,7 @@ df = df[existing_columns]
 st.title("Drivers Confirmations Tracker")
 
 # Fonction pour déterminer si la réponse est positive
-positive_responses = {"yes", "oui", "y", "confirmed", "ok", "okay"}  # Variations des réponses positives
+positive_responses = {"yes", "oui", "y", "confirmed", "ok", "okay","je confirme"}  # Variations des réponses positives
 def is_positive_response(response):
     return str(response).strip().lower() in positive_responses
 
@@ -91,7 +91,7 @@ def color_confirmation(row):
 if 'cycle' in df.columns:
     grouped = df.groupby('cycle')
     for cycle, group in grouped:
-        st.markdown(f"### Cycle: {cycle}")  # Display cycle as a header
+        st.markdown(f"### {cycle}")  # Display cycle as a header
         styled_group = group.style.apply(color_confirmation, axis=1)
         st.dataframe(styled_group)  # Display the styled dataframe for this group
 else:
