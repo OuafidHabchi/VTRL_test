@@ -62,7 +62,7 @@ selected_color = st.selectbox("Choisissez une couleur de fond pour ce shift", li
 shift_color = color_options[selected_color]  # Récupérer la couleur hexadécimale correspondante
 
 # Bouton pour ajouter le shift
-if st.button("Ajouter le shift"):
+if st.button("Add a Shift"):
     if shift_name and shift_time:
         add_shift(shift_name, shift_time, shift_color)
     else:
@@ -94,11 +94,11 @@ if not df_shifts.empty:
         new_shift_color = color_options[new_shift_color_name]
 
         # Bouton pour mettre à jour le shift
-        if st.button("Mettre à jour le shift"):
+        if st.button("Update a Shift"):
             update_shift(shift_to_edit["_id"], new_shift_name, new_shift_time, new_shift_color)
 
         # Bouton pour supprimer le shift
-        if st.button("Supprimer le shift"):
+        if st.button("Delete Shift"):
             delete_shift(shift_to_edit["_id"])
 
 else:
