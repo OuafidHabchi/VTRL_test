@@ -17,7 +17,7 @@ def get_shifts_colors():
 shift_colors = get_shifts_colors()
 
 # URL de la Google Sheet (CSV) - Utilisation du bon format d'URL CSV
-sheet_url = "sheet_url = "https://docs.google.com/spreadsheets/d/1trM5WUwUnEFvD6ckVMplyR1iZtmKTeXhpPwPTS54E5s/gviz/tq?tqx=out:csv"
+sheet_url = "https://docs.google.com/spreadsheets/d/1trM5WUwUnEFvD6ckVMplyR1iZtmKTeXhpPwPTS54E5s/gviz/tq?tqx=out:csv"
 
 # Lire les données CSV depuis Google Sheets avec gestion des lignes mal formatées
 try:
@@ -27,6 +27,9 @@ except pd.errors.ParserError as e:
     df = None
 
 if df is not None:
+    # Afficher les colonnes du DataFrame pour débogage
+    st.write("Columns in the CSV file:", df.columns.tolist())
+
     # Nettoyer les colonnes
     df.columns = df.columns.str.strip()
 
@@ -38,6 +41,7 @@ if df is not None:
     # Si des colonnes sont manquantes, afficher une erreur
     if missing_columns:
         st.error(f"Missing columns: {', '.join(missing_columns)}")
+        st.write(f"Available columns: {', '.join(df.columns.tolist())}")
     else:
         # Filtrer pour garder uniquement les colonnes attendues
         df = df[existing_columns]
