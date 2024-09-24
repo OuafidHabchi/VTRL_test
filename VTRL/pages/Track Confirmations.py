@@ -17,7 +17,7 @@ def get_shifts_colors():
 shift_colors = get_shifts_colors()
 
 # URL de la Google Sheet (CSV) - Utilisation du bon format d'URL CSV
-sheet_url = "https://docs.google.com/spreadsheets/d/1trM5WUwUnEFvD6ckVMplyR1iZtmKTeXhpPwPTS54E5s/edit?usp=sharing"
+sheet_url = "sheet_url = "https://docs.google.com/spreadsheets/d/1trM5WUwUnEFvD6ckVMplyR1iZtmKTeXhpPwPTS54E5s/gviz/tq?tqx=out:csv"
 
 # Lire les données CSV depuis Google Sheets avec gestion des lignes mal formatées
 try:
