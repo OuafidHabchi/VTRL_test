@@ -16,7 +16,7 @@ def get_shifts_colors():
 shift_colors = get_shifts_colors()
 
 # URL de la Google Sheet (à remplacer par le tien si nécessaire)
-sheet_url = "https://docs.google.com/spreadsheets/d/14dZqtAclmYsudVHV7mlIbXyM2wSwcu55KhwCOm9_Bv8/gviz/tq?tqx=out:csv"
+sheet_url = "https://docs.google.com/spreadsheets/d/1trM5WUwUnEFvD6ckVMplyR1iZtmKTeXhpPwPTS54E5s/edit?usp=sharing"
 
 # Lire les données CSV depuis Google Sheets
 df = pd.read_csv(sheet_url)
