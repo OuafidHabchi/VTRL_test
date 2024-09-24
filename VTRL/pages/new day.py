@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import requests
+from datetime import datetime
 
 # URL du webhook
 webhook_url = "https://hook.us2.make.com/52m7piv6y7e4g4k3y7hyi5qigul5d6v6"
@@ -31,6 +32,10 @@ if df is not None:
     # Convertir les données en CSV
     csv_data = non_empty_rows.to_csv(index=False)
 
+    # Obtenir la date actuelle et formater le nom du fichier
+    today = datetime.today().strftime('%Y-%m-%d')
+    file_name = f'Confirmation_{today}.csv'
+
     # Afficher les étapes pour commencer une nouvelle journée
     st.title("Start a New Day")
 
@@ -40,7 +45,7 @@ if df is not None:
     st.download_button(
         label="Download CSV",
         data=csv_data,
-        file_name='responses.csv',
+        file_name=file_name,  # Utilisation du nom de fichier avec la date du jour
         mime='text/csv'
     )
 
@@ -48,7 +53,7 @@ if df is not None:
     st.subheader("Step 2: New day")
     st.write("After downloading the CSV, click the button below to start a new day by clearing out the old confirmations .")
 
-    if st.button("clearing out the old confirmations"):
+    if st.button("Send data to webhook"):
         # Préparer le payload sous forme d'objet JSON pour le webhook
         payload = {"responses": response_list}
 
@@ -58,7 +63,7 @@ if df is not None:
             
             # Vérifier si l'envoi a réussi
             if response.status_code == 200:
-                st.success("The data was successfully sent to the webhook.")
+                st.success("The data was successfully sent .")
             else:
                 st.error(f"Error in sending. Response code: {response.status_code}")
 
