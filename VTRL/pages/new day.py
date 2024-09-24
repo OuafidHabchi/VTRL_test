@@ -53,7 +53,7 @@ if df is not None:
     st.subheader("Step 2: New day")
     st.write("After downloading the CSV, click the button below to start a new day by clearing out the old confirmations .")
 
-    if st.button("Send data to webhook"):
+    if st.button("New Day"):
         # Préparer le payload sous forme d'objet JSON pour le webhook
         payload = {"responses": response_list}
 
