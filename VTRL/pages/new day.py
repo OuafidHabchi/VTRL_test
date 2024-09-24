@@ -7,7 +7,7 @@ from datetime import datetime
 webhook_url = "https://hook.us2.make.com/52m7piv6y7e4g4k3y7hyi5qigul5d6v6"
 
 # URL de la Google Sheet (CSV)
-sheet_url = "https://docs.google.com/spreadsheets/d/1trM5WUwUnEFvD6ckVMplyR1iZtmKTeXhpPwPTS54E5s/edit?usp=sharing"
+sheet_url = "https://docs.google.com/spreadsheets/d/1trM5WUwUnEFvD6ckVMplyR1iZtmKTeXhpPwPTS54E5s/gviz/tq?tqx=out:csv"
 
 # Lire les données CSV depuis Google Sheets avec gestion des lignes mal formatées
 try:
