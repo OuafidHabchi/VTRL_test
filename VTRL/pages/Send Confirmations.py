@@ -97,14 +97,16 @@ if employees:
                 name_and_id = employee["Name and ID"]
 
                 if "Cancelled Shift" in selected_shift:
-                    message = (f"{name_and_id}, 
-                                    Demain ({tomorrow}) annulé en raison de réductions d'itinéraires Amazon. Restez dispo pour une éventuelle carte-cadeau Tim Hortons.  
-                                    Tomorrow ({tomorrow}) canceled due to Amazon route cuts. Stay available for a possible Tim Hortons gift card.  
-                                    Cordialement, VTRL Dispatch.")
+                    message = (f"{name_and_id}, "
+                               f"Demain ({tomorrow}) annulé en raison de réductions d'itinéraires Amazon. "
+                               "Restez dispo pour une éventuelle carte-cadeau Tim Hortons. "
+                               f"Tomorrow ({tomorrow}) canceled due to Amazon route cuts. "
+                               "Stay available for a possible Tim Hortons gift card. "
+                               "Cordialement, VTRL Dispatch.")
                 else:
-                    message = (f"{name_and_id}, 
-                                    Demain ({tomorrow}) à {selected_shift}. Merci de confirmer PAR Oui. 
-                                    Tomorrow ({tomorrow}) at {selected_shift}. Please confirm BY YES.")
+                    message = (f"{name_and_id}, "
+                               f"Demain ({tomorrow}) à {selected_shift}. Merci de confirmer PAR Oui. "
+                               f"Tomorrow ({tomorrow}) at {selected_shift}. Please confirm BY YES.")
 
                 # Add the message to the employee's data
                 employee['message'] = message
@@ -119,4 +121,4 @@ if employees:
             if send_to_api(data_to_send):
                 st.success("Les confirmations ont été envoyées avec succès ! Veuillez consulter **Suivi Schedule** pour suivre les réponses.")
 else:
-    st.write("Aucun employé trouvé dans la base de données.")  
+    st.write("Aucun employé trouvé dans la base de données.")
