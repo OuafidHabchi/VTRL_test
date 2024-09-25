@@ -96,7 +96,7 @@ if employees:
             for employee in employee_data:
                 name_and_id = employee["Name and ID"]
 
-                 if "Cancelled Shift" in selected_shift:
+                if "Cancelled Shift" in selected_shift:
                     message = (f"{name_and_id}, 
                                     Demain ({tomorrow}) annulé en raison de réductions d'itinéraires Amazon. Restez dispo pour une éventuelle carte-cadeau Tim Hortons.  
                                     Tomorrow ({tomorrow}) canceled due to Amazon route cuts. Stay available for a possible Tim Hortons gift card.  
