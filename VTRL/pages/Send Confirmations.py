@@ -74,6 +74,12 @@ if employees:
     # Affichage du selectbox avec les options disponibles
     selected_shift = st.selectbox("Quart du travail", shift_options)
 
+    # Extract the time from the selected shift
+    if "Cancelled Shift" not in selected_shift:
+        shift_time = selected_shift.split('(')[-1].replace(')', '').strip()  # Extract time
+    else:
+        shift_time = None
+
     # Button for confirmation
     if st.button("Confirmer"):
         # Check if at least one employee is selected
@@ -97,16 +103,18 @@ if employees:
                 name_and_id = employee["Name and ID"]
 
                 if "Cancelled Shift" in selected_shift:
-                    message = (f"{name_and_id}, "
-                               f"Demain ({tomorrow}) annulé en raison de réductions d'itinéraires Amazon. "
-                               "Restez dispo pour une éventuelle carte-cadeau Tim Hortons. "
-                               f"Tomorrow ({tomorrow}) canceled due to Amazon route cuts. "
-                               "Stay available for a possible Tim Hortons gift card. "
-                               "Cordialement, VTRL Dispatch.")
+                        message = (f"{name_and_id}, "
+                                f"Demain annulé."
+                                "Restez dispo pour une carte-cadeau Tim Hortons. "
+                                f"\nTomorrow canceled. "
+                                "Stay available for a Tim Hortons gift card. "
+                                "\nVTRL Dispatch.")
+
                 else:
                     message = (f"{name_and_id}, "
-                               f"Demain ({tomorrow}) à {selected_shift}. Merci de confirmer PAR Oui. "
-                               f"Tomorrow ({tomorrow}) at {selected_shift}. Please confirm BY YES.")
+                               f"Demain ({tomorrow}) à {shift_time}. Merci de confirmer PAR Oui."
+                               f"\nTomorrow ({tomorrow}) at {shift_time}. Please confirm BY YES."
+                               "\n\nVTRL DISPATCH")
 
                 # Add the message to the employee's data
                 employee['message'] = message
