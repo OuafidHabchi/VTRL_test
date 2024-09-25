@@ -96,24 +96,15 @@ if employees:
             for employee in employee_data:
                 name_and_id = employee["Name and ID"]
 
-                if "Cancelled Shift" in selected_shift:
-                    message = (f"Cher(e) {name_and_id}, \n\n"
-                               "En raison de réductions d'itinéraires imprévues de la part d'Amazon, "
-                               f"votre quart de travail pour demain ({tomorrow}) est annulé. "
-                               "Restez disponible au cas où, et vous pourriez obtenir une carte-cadeau Tim Hortons.\n\n"
-                               "Due to unforeseen route reductions from Amazon, your shift for tomorrow "
-                               f"({tomorrow}) has been cancelled. Stay available, and you might receive a "
-                               "Tim Hortons gift card if needed.\n\n"
-                               "Cordialement, \nVTRL Dispatch")
+                 if "Cancelled Shift" in selected_shift:
+                    message = (f"{name_and_id}, 
+                                    Demain ({tomorrow}) annulé en raison de réductions d'itinéraires Amazon. Restez dispo pour une éventuelle carte-cadeau Tim Hortons.  
+                                    Tomorrow ({tomorrow}) canceled due to Amazon route cuts. Stay available for a possible Tim Hortons gift card.  
+                                    Cordialement, VTRL Dispatch.")
                 else:
-                    message = (f"Cher(e) {name_and_id}, \n\n"
-                               f"Vous êtes programmé(e) pour travailler demain ({tomorrow}) à {selected_shift}. \n"
-                               "Merci de bien vouloir confirmer votre disponibilité en répondant à ce message PAR Oui.\n\n"
-                               "Cordialement, \n\n"
-                               f"Dear {name_and_id}, \n\n"
-                               f"You are scheduled to work tomorrow ({tomorrow}) at {selected_shift}. \n"
-                               "Please confirm your availability by responding to this message BY Yes.\n\n"
-                               "Best regards, \nVTRL Dispatch")
+                    message = (f"{name_and_id}, 
+                                    Demain ({tomorrow}) à {selected_shift}. Merci de confirmer PAR Oui. 
+                                    Tomorrow ({tomorrow}) at {selected_shift}. Please confirm BY YES.")
 
                 # Add the message to the employee's data
                 employee['message'] = message
