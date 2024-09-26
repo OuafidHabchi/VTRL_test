@@ -1,3 +1,4 @@
+import time  # For introducing delay
 import streamlit as st
 import pandas as pd
 import requests  # For sending data to the API
@@ -127,6 +128,10 @@ if employees:
 
             # Send the data to the API
             if send_to_api(data_to_send):
+                # Introduce a 20-second delay before showing the success message
+                time.sleep(20)
                 st.success("Les confirmations ont été envoyées avec succès ! Veuillez consulter **Suivi Schedule** pour suivre les réponses.")
+
+
 else:
     st.write("Aucun employé trouvé dans la base de données.")
