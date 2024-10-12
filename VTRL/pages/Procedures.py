@@ -9,11 +9,6 @@ db = client["Employees"]
 collection_employees = db["employes"]
 collection_procedures = db["procedures"]
 
-# Fonction pour récupérer les employés depuis la collection
-# def get_employee_names_and_ids():
-#     employees = collection_employees.find({})
-#     return [employee["Name and ID"] for employee in employees]
-
 # Fonction pour récupérer les procédures depuis la collection
 def get_procedure_names():
     procedures = collection_procedures.find({})
@@ -24,12 +19,12 @@ def get_procedure_by_name(name):
     return collection_procedures.find_one({"Nom": name})
 
 # Fonction pour ajouter une nouvelle procédure
-def add_procedure(nom, body, url):
+def add_procedure(nom, body_en, body_fr, url):
     new_procedure = {
         "Nom": nom,
-        "Body": body,
-        "URL": url,
-        
+        "Body_en": body_en,
+        "Body_fr": body_fr,
+        "URL": url
     }
     collection_procedures.insert_one(new_procedure)
 
@@ -52,16 +47,13 @@ if option == "Ajouter une procédure":
     
     # Entrée pour les informations de la nouvelle procédure
     new_nom = st.text_input("Nom de la procédure")
-    new_body = st.text_area("Contenu de la procédure (Body)")
+    new_body_en = st.text_area("Contenu de la procédure (Body en anglais)")
+    new_body_fr = st.text_area("Contenu de la procédure (Body en français)")
     new_url = st.text_input("URL de la procédure")
-    
-    # # Afficher la liste des employés
-    # employee_names = get_employee_names_and_ids()
-    # selected_employees = st.multiselect("Sélectionnez les employés", employee_names)
     
     # Bouton pour ajouter la procédure
     if st.button("Ajouter la procédure"):
-        add_procedure(new_nom, new_body, new_url)
+        add_procedure(new_nom, new_body_en, new_body_fr, new_url)
         st.success("Nouvelle procédure ajoutée avec succès")
 
 elif option == "Mettre à jour une procédure":
@@ -76,14 +68,16 @@ elif option == "Mettre à jour une procédure":
         
         # Afficher les champs à modifier
         updated_nom = st.text_input("Nom", value=procedure["Nom"])
-        updated_body = st.text_area("Contenu (Body)", value=procedure["Body"])
+        updated_body_en = st.text_area("Contenu (Body en anglais)", value=procedure.get("Body_en", ""))
+        updated_body_fr = st.text_area("Contenu (Body en français)", value=procedure.get("Body_fr", ""))
         updated_url = st.text_input("URL", value=procedure["URL"])
         
         # Bouton pour mettre à jour la procédure
         if st.button("Mettre à jour"):
             updated_data = {
                 "Nom": updated_nom,
-                "Body": updated_body,
+                "Body_en": updated_body_en,
+                "Body_fr": updated_body_fr,
                 "URL": updated_url
             }
             update_procedure(selected_procedure_name, updated_data)
@@ -95,20 +89,11 @@ elif option == "Mettre à jour une procédure":
             st.success("Procédure supprimée avec succès")
 
 elif option == "Envoyer une procédure":
-    
-        # Fonction pour récupérer les employés depuis la collection
+
+    # Fonction pour récupérer les employés depuis la collection
     def get_employee_names_and_ids():
         employees = collection_employees.find({})
         return [{"name": employee["Name and ID"], "personal_phone": employee["Personal Phone Number"], "email": employee["Email"]} for employee in employees]
-
-    # Fonction pour récupérer les procédures depuis la collection
-    def get_procedure_names():
-        procedures = collection_procedures.find({})
-        return [procedure["Nom"] for procedure in procedures]
-
-    # Fonction pour récupérer une procédure par nom
-    def get_procedure_by_name(name):
-        return collection_procedures.find_one({"Nom": name})
 
     # Fonction pour vérifier que les données sont conformes au format JSON
     def sanitize_data(data):
@@ -148,7 +133,7 @@ elif option == "Envoyer une procédure":
     procedure_names = get_procedure_names()
     selected_procedure_name = st.selectbox("Sélectionnez une procédure à envoyer", procedure_names)
 
-    # 4. Validation et envoi des données
+    # Partie de validation et envoi des données
     if st.button("Envoyer la procédure"):
         # Vérification que l'utilisateur a sélectionné au moins un employé, une procédure, et une méthode d'envoi
         if not selected_employees:
@@ -164,7 +149,7 @@ elif option == "Envoyer une procédure":
             # Récupération des informations de la procédure
             procedure = get_procedure_by_name(selected_procedure_name)
             
-            # Préparation des données à envoyer
+            # Préparation des données à envoyer avec Body_en et Body_fr
             data = {
                 "employees": [
                     {
@@ -175,7 +160,8 @@ elif option == "Envoyer une procédure":
                 ],
                 "procedure": {
                     "name": procedure["Nom"],
-                    "body": procedure["Body"],
+                    "body_en": procedure.get("Body_en", ""),  # Utilise Body_en
+                    "body_fr": procedure.get("Body_fr", ""),  # Utilise Body_fr
                     "url": procedure["URL"]
                 },
                 "send_via": send_via
@@ -193,3 +179,4 @@ elif option == "Envoyer une procédure":
                 st.success("Procédure envoyée avec succès.")
             else:
                 st.error(f"Échec de l'envoi de la procédure. Code de réponse : {response.status_code}")
+
