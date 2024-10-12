@@ -1,6 +1,7 @@
 import streamlit as st
 from pymongo import MongoClient
 import requests
+import math
 
 # Connexion à MongoDB
 client = MongoClient("mongodb+srv://wafid:wafid@ouafid.aihn5iq.mongodb.net")
@@ -109,13 +110,36 @@ elif option == "Envoyer une procédure":
     def get_procedure_by_name(name):
         return collection_procedures.find_one({"Nom": name})
 
+    # Fonction pour vérifier que les données sont conformes au format JSON
+    def sanitize_data(data):
+        if isinstance(data, (float, int)) and (math.isinf(data) or math.isnan(data)):
+            return None
+        return data
+
+    # Fonction pour nettoyer les données avant l'envoi
+    def sanitize_payload(payload):
+        if isinstance(payload, dict):
+            return {key: sanitize_payload(value) for key, value in payload.items()}
+        elif isinstance(payload, list):
+            return [sanitize_payload(item) for item in payload]
+        else:
+            return sanitize_data(payload)
+
     # Titre de la section "Envoyer une procédure"
     st.header("Envoyer une procédure")
 
     # 1. Sélection des employés
     employee_data = get_employee_names_and_ids()
     employee_names = [emp["name"] for emp in employee_data]
-    selected_employees = st.multiselect("Sélectionnez les employés à qui envoyer la procédure", employee_names)
+
+    # Case à cocher pour sélectionner tous les employés
+    select_all = st.checkbox("Sélectionner tous les employés")
+
+    # Si "Sélectionner tous les employés" est coché, nous n'affichons pas la liste des employés
+    if not select_all:
+        selected_employees = st.multiselect("Sélectionnez les employés à qui envoyer la procédure", employee_names)
+    else:
+        selected_employees = employee_names  # Tous les employés sont sélectionnés implicitement
 
     # 2. Choix de la méthode d'envoi (email ou téléphone)
     send_via = st.selectbox("Choisissez la méthode d'envoi", ["Email", "Phone"])
@@ -157,14 +181,15 @@ elif option == "Envoyer une procédure":
                 "send_via": send_via
             }
 
+            # Nettoyage des données
+            sanitized_data = sanitize_payload(data)
+
             # Envoi de la requête POST au webhook
             webhook_url = "https://hook.us2.make.com/5u0rc648tifai2vhewnrnsfyjd1j4woh"
-            response = requests.post(webhook_url, json=data)
+            response = requests.post(webhook_url, json=sanitized_data)
 
             # Vérification du succès de l'envoi
             if response.status_code == 200:
                 st.success("Procédure envoyée avec succès.")
             else:
                 st.error(f"Échec de l'envoi de la procédure. Code de réponse : {response.status_code}")
-        
-    
