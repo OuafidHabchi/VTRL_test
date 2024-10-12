@@ -19,12 +19,13 @@ def get_procedure_by_name(name):
     return collection_procedures.find_one({"Nom": name})
 
 # Fonction pour ajouter une nouvelle procédure
-def add_procedure(nom, body_en, body_fr, url):
+def add_procedure(nom, body_en, body_fr, url_en, url_fr):
     new_procedure = {
         "Nom": nom,
         "Body_en": body_en,
         "Body_fr": body_fr,
-        "URL": url
+        "URL_en": url_en,
+        "URL_fr": url_fr
     }
     collection_procedures.insert_one(new_procedure)
 
@@ -49,11 +50,12 @@ if option == "Ajouter une procédure":
     new_nom = st.text_input("Nom de la procédure")
     new_body_en = st.text_area("Contenu de la procédure (Body en anglais)")
     new_body_fr = st.text_area("Contenu de la procédure (Body en français)")
-    new_url = st.text_input("URL de la procédure")
+    new_url_en = st.text_input("URL de la procédure (en anglais)")
+    new_url_fr = st.text_input("URL de la procédure (en français)")
     
     # Bouton pour ajouter la procédure
     if st.button("Ajouter la procédure"):
-        add_procedure(new_nom, new_body_en, new_body_fr, new_url)
+        add_procedure(new_nom, new_body_en, new_body_fr, new_url_en, new_url_fr)
         st.success("Nouvelle procédure ajoutée avec succès")
 
 elif option == "Mettre à jour une procédure":
@@ -70,7 +72,8 @@ elif option == "Mettre à jour une procédure":
         updated_nom = st.text_input("Nom", value=procedure["Nom"])
         updated_body_en = st.text_area("Contenu (Body en anglais)", value=procedure.get("Body_en", ""))
         updated_body_fr = st.text_area("Contenu (Body en français)", value=procedure.get("Body_fr", ""))
-        updated_url = st.text_input("URL", value=procedure["URL"])
+        updated_url_en = st.text_input("URL (en anglais)", value=procedure.get("URL_en", ""))
+        updated_url_fr = st.text_input("URL (en français)", value=procedure.get("URL_fr", ""))
         
         # Bouton pour mettre à jour la procédure
         if st.button("Mettre à jour"):
@@ -78,7 +81,8 @@ elif option == "Mettre à jour une procédure":
                 "Nom": updated_nom,
                 "Body_en": updated_body_en,
                 "Body_fr": updated_body_fr,
-                "URL": updated_url
+                "URL_en": updated_url_en,
+                "URL_fr": updated_url_fr
             }
             update_procedure(selected_procedure_name, updated_data)
             st.success("Procédure mise à jour avec succès")
@@ -162,7 +166,8 @@ elif option == "Envoyer une procédure":
                     "name": procedure["Nom"],
                     "body_en": procedure.get("Body_en", ""),  # Utilise Body_en
                     "body_fr": procedure.get("Body_fr", ""),  # Utilise Body_fr
-                    "url": procedure["URL"]
+                    "url_en": procedure.get("URL_en", ""),    # Utilise URL_en
+                    "url_fr": procedure.get("URL_fr", "")     # Utilise URL_fr
                 },
                 "send_via": send_via
             }
@@ -179,4 +184,3 @@ elif option == "Envoyer une procédure":
                 st.success("Procédure envoyée avec succès.")
             else:
                 st.error(f"Échec de l'envoi de la procédure. Code de réponse : {response.status_code}")
-
