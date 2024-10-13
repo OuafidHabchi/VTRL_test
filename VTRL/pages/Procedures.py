@@ -153,7 +153,20 @@ elif option == "Envoyer une procédure":
             # Récupération des informations de la procédure
             procedure = get_procedure_by_name(selected_procedure_name)
             
-            # Préparation des données à envoyer avec Body_en et Body_fr
+            # Préparation du dictionnaire de la procédure sans envoyer d'URL vide
+            procedure_data = {
+                "name": procedure["Nom"],
+                "body_en": procedure.get("Body_en", ""),
+                "body_fr": procedure.get("Body_fr", "")
+            }
+            
+            # Ajoute uniquement les URL non vides
+            if procedure.get("URL_en"):
+                procedure_data["url_en"] = procedure["URL_en"]
+            if procedure.get("URL_fr"):
+                procedure_data["url_fr"] = procedure["URL_fr"]
+
+            # Préparation des données complètes
             data = {
                 "employees": [
                     {
@@ -162,13 +175,7 @@ elif option == "Envoyer une procédure":
                         "email": emp["email"]
                     } for emp in selected_employee_info
                 ],
-                "procedure": {
-                    "name": procedure["Nom"],
-                    "body_en": procedure.get("Body_en", ""),  # Utilise Body_en
-                    "body_fr": procedure.get("Body_fr", ""),  # Utilise Body_fr
-                    "url_en": procedure.get("URL_en", ""),    # Utilise URL_en
-                    "url_fr": procedure.get("URL_fr", "")     # Utilise URL_fr
-                },
+                "procedure": procedure_data,  # Utilisation de la procédure sans URL vide
                 "send_via": send_via
             }
 
@@ -184,3 +191,4 @@ elif option == "Envoyer une procédure":
                 st.success("Procédure envoyée avec succès.")
             else:
                 st.error(f"Échec de l'envoi de la procédure. Code de réponse : {response.status_code}")
+
