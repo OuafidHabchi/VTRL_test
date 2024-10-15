@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import pytz
 from pymongo import MongoClient
 import requests
 
@@ -31,7 +32,7 @@ if df is not None:
     df.columns = df.columns.str.strip()
 
     # Vérifier si les colonnes attendues existent
-    expected_columns = ['nom', 'cycle', 'confirmation', 'tel']
+    expected_columns = ['nom', 'cycle', 'confirmation', 'tel', 'date']
     existing_columns = [col for col in expected_columns if col in df.columns]
     missing_columns = [col for col in expected_columns if col not in df.columns]
     
@@ -41,6 +42,21 @@ if df is not None:
     else:
         # Filtrer pour garder uniquement les colonnes attendues
         df = df[existing_columns]
+
+        # Convertir la colonne 'date' en format datetime (si présente)
+        if 'date' in df.columns:
+            df['date'] = pd.to_datetime(df['date'], errors='coerce')  # Convert to datetime
+
+            # Définir le fuseau horaire de Montréal (UTC-4 ou UTC-5 avec EDT/EST)
+            montreal_tz = pytz.timezone('America/Montreal')
+
+            # Vérifier si la colonne est tz-aware ou naive et convertir en fonction
+            if pd.api.types.is_datetime64tz_dtype(df['date']):
+                # Si la colonne est déjà timezone-aware, on applique tz_convert
+                df['date'] = df['date'].dt.tz_convert(montreal_tz)
+            else:
+                # Si la colonne n'a pas de timezone, on applique tz_localize
+                df['date'] = df['date'].dt.tz_localize('UTC').dt.tz_convert(montreal_tz)
 
         # Afficher le titre de l'application
         st.title("Drivers Confirmations Tracker")
@@ -101,4 +117,4 @@ if df is not None:
                 styled_group = group.style.apply(color_confirmation, axis=1)
                 st.dataframe(styled_group)  # Afficher le dataframe stylisé pour ce groupe
         else:
-            st.error("The 'cycle' column is missing from the dataset.")
+            st.error("The 'cycle' column is missing from the dataset.")    
