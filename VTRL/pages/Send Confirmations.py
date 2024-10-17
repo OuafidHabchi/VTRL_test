@@ -4,6 +4,7 @@ import pandas as pd
 import requests  # For sending data to the API
 from pymongo import MongoClient
 from datetime import datetime, timedelta
+import pytz  # For time zone management
 
 # Connexion à MongoDB
 client = MongoClient("mongodb+srv://wafid:wafid@ouafid.aihn5iq.mongodb.net")
@@ -96,8 +97,11 @@ if employees:
             # Convert DataFrame to dictionary
             employee_data = selected_data.to_dict(orient="records")
 
-            # Calculate tomorrow's date
-            tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+            # Define Montreal timezone
+            montreal_tz = pytz.timezone("America/Montreal")
+
+            # Calculate tomorrow's date in Montreal timezone
+            tomorrow = (datetime.now(montreal_tz) + timedelta(days=1)).strftime("%Y-%m-%d")
 
             # Add message for each employee based on shift selection
             for employee in employee_data:
@@ -131,7 +135,6 @@ if employees:
                 # Introduce a 20-second delay before showing the success message
                 time.sleep(20)
                 st.success("Les confirmations ont été envoyées avec succès ! Veuillez consulter **Suivi Schedule** pour suivre les réponses.")
-
 
 else:
     st.write("Aucun employé trouvé dans la base de données.")
