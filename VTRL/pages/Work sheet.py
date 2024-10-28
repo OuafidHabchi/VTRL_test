@@ -77,9 +77,9 @@ def color_row(row):
     return ['background-color: lightgrey'] * len(row)
 
 # Séparer les tableaux selon les différents SHIFTs et assurer que chaque DataFrame contient bien la colonne 'CONFIRM'
+cycle_0_df = ensure_confirm_column(df[df['SHIFT'].str.contains("Cycle 0", na=False)])
 cycle_1_w1_df = ensure_confirm_column(df[df['SHIFT'].str.contains("Cycle 1 \(W1\)", na=False)])
 cycle_1_w2_df = ensure_confirm_column(df[df['SHIFT'].str.contains("Cycle 1 \(W2\)", na=False)])
-cycle_0_df = ensure_confirm_column(df[df['SHIFT'].str.contains("Cycle 0", na=False)])
 flex_df = ensure_confirm_column(df[df['SHIFT'].str.contains("Flex", na=False)])
 crashsort_df = ensure_confirm_column(df[df['SHIFT'].str.contains("Crashsort", na=False)])
 standby_df = ensure_confirm_column(df[df['SHIFT'].str.contains("STANDBY", na=False)])
@@ -97,6 +97,13 @@ def display_table_with_count(df, title):
     st.subheader(f"{title} ({count} DAs)")
     st.dataframe(df[existing_columns].style.apply(color_row, axis=1))
 
+# Tableau Cycle 0 (affiché en premier)
+if not cycle_0_df.empty:
+    display_table_with_count(cycle_0_df, "Cycle 0")
+else:
+    st.subheader("Cycle 0")
+    st.write("Aucune donnée trouvée pour Cycle 0")
+
 # Tableau Cycle 1 (W1)
 if not cycle_1_w1_df.empty:
     display_table_with_count(cycle_1_w1_df, "Cycle 1 (W1)")
@@ -110,13 +117,6 @@ if not cycle_1_w2_df.empty:
 else:
     st.subheader("Cycle 1 (W2)")
     st.write("Aucune donnée trouvée pour Cycle 1 (W2)")
-
-# Tableau Cycle 0
-if not cycle_0_df.empty:
-    display_table_with_count(cycle_0_df, "Cycle 0")
-else:
-    st.subheader("Cycle 0")
-    st.write("Aucune donnée trouvée pour Cycle 0")
 
 # Tableau Flex
 if not flex_df.empty:
