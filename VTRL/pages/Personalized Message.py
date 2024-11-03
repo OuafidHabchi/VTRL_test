@@ -47,7 +47,8 @@ selected_employees = st.multiselect("Sélectionnez les employés à contacter", 
 select_all = st.checkbox("Sélectionner tous les employés")
 
 if select_all:
-    selected_employees = employee_names  # Si coché, tous les employés sont sélectionnés
+    # Si coché, tous les employés sont sélectionnés sauf le premier s'il est vide
+    selected_employees = employee_names[1:] if employee_names and employee_names[0] == "" else employee_names
 
 # Zone de texte pour écrire le message
 message = st.text_area("Écrire le message à envoyer")
