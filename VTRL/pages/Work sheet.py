@@ -9,7 +9,7 @@ current_date = datetime.now().strftime("%Y-%m-%d")
 sheet_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTN_TY54FgOENRgPn5SPsn0GWVCUovoQt5yZhhvJjZW8WtEIseWNeotcqRTfVIcFoZgYHFA4qlcYVyD/pub?gid=1218607264&single=true&output=csv"
 
 # Lire les données CSV depuis la ligne 4 (index 10)
-df = pd.read_csv(sheet_url, header=10)
+df = pd.read_csv(sheet_url, header=11)
 
 # Afficher le titre de l'application avec le jour actuel
 st.title(f"VTRL - {current_date}")
