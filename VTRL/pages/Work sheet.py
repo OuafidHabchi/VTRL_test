@@ -5,12 +5,13 @@ from datetime import datetime
 # Get the current date
 current_date = datetime.now().strftime("%Y-%m-%d")
 
-# Google Sheet URL in CSV format
+# URL of the published Google Sheet in CSV format
 sheet_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTN_TY54FgOENRgPn5SPsn0GWVCUovoQt5yZhhvJjZW8WtEIseWNeotcqRTfVIcFoZgYHFA4qlcYVyD/pub?gid=1218607264&single=true&output=csv"
 
-# Read the CSV data, specifying the header row
+# Read the CSV data starting from row 12 (header=11)
 try:
     df = pd.read_csv(sheet_url, header=11)
+    st.write("Data Preview:", df.head())  # Display a preview to check if data is loaded correctly
 except Exception as e:
     st.error("Failed to load data. Please check the sheet URL or format.")
     st.stop()
@@ -27,11 +28,11 @@ if missing_columns:
     st.error(f"Missing columns: {missing_columns}")
     st.stop()
 
-# Strip spaces in 'SHIFT' and fill empty values in 'CONFIRM'
+# Clean the 'SHIFT' column and fill empty values in 'CONFIRM'
 df['SHIFT'] = df['SHIFT'].fillna('').str.strip()
 df['CONFIRM'] = df.get('CONFIRM', '')
 
-# Define color-coding function
+# Function to color rows based on conditions
 def color_row(row):
     if row['CONFIRM'] == 'TO CANCEL':
         return ['background-color: yellow'] * len(row)
@@ -60,7 +61,7 @@ def color_row(row):
             return ['background-color: lightpink'] * len(row)
     return ['background-color: lightgrey'] * len(row)
 
-# Filter data based on shifts
+# Filter data by shifts
 shift_tables = {
     "Cycle 0": df[df['SHIFT'].str.contains("Cycle 0", na=False)],
     "Cycle 1 (W1)": df[df['SHIFT'].str.contains("Cycle 1 \\(W1\\)", na=False)],
