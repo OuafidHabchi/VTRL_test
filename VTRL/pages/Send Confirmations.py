@@ -108,11 +108,12 @@ if employees:
                 name_and_id = employee["Name and ID"]
 
                 if "Cancelled Shift" in selected_shift:
-                        message = (f"Demain ({tomorrow}) annulé. "
-                                    "Merci de rester disponible en cas de besoin. "
-                                    "\nTomorrow ({tomorrow}) canceled. "
-                                    "Please stay available if needed. "
-                                    "\n\nVTRL Dispatch.")
+                        message = (
+                                        f"Demain ({tomorrow}) annulé. Merci de rester disponible en cas de besoin."
+                                        f"\nTomorrow ({tomorrow}) canceled. Please stay available if needed."
+                                        "\n\nVTRL Dispatch."
+                                    )
+
                 else:
                    message = (f"Demain ({tomorrow}) à {shift_time}. Merci de confirmer PAR Oui."
                                     f"\nTomorrow ({tomorrow}) at {shift_time}. Please confirm BY YES."
