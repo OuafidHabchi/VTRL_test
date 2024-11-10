@@ -65,7 +65,7 @@ if df is not None:
         positive_responses = {"yes", "oui", "y", "confirmed", "ok", "okay", "je confirme"}
         
         def is_positive_response(response):
-            return str(response).strip().lower() in positive_responses
+            return str(response).strip().lower() in positive_responses if pd.notna(response) else False
 
         # Filtrer les réponses positives
         positive_df = df[df['confirmation'].apply(is_positive_response)]
@@ -97,7 +97,7 @@ if df is not None:
 
         # Définir une fonction pour appliquer des styles CSS personnalisés en fonction de la confirmation
         def color_confirmation(row):
-            response = row['confirmation'].strip().lower() if 'confirmation' in row else 'unknown'
+            response = str(row['confirmation']).strip().lower() if pd.notna(row['confirmation']) else 'unknown'
             
             if is_positive_response(response):
                 color = 'background-color: lightgreen;'  # Vert pour les réponses positives (Yes, Oui, etc.)
@@ -117,4 +117,4 @@ if df is not None:
                 styled_group = group.style.apply(color_confirmation, axis=1)
                 st.table(styled_group)  # Afficher le DataFrame stylisé pour ce groupe
         else:
-            st.error("The 'cycle' column is missing from the dataset.")    
+            st.error("The 'cycle' column is missing from the dataset.")
