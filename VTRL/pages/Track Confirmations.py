@@ -115,6 +115,6 @@ if df is not None:
             for cycle, group in grouped:
                 st.markdown(f"### {cycle}")  # Afficher le cycle en tant qu'en-tête
                 styled_group = group.style.apply(color_confirmation, axis=1)
-                st.dataframe(styled_group)  # Afficher le dataframe stylisé pour ce groupe
+                st.table(styled_group)  # Afficher le DataFrame stylisé pour ce groupe
         else:
             st.error("The 'cycle' column is missing from the dataset.")    
